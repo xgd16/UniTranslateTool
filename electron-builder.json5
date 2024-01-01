@@ -1,0 +1,50 @@
+/**
+ * @see https://www.electron.build/configuration/configuration
+ */
+{
+  "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
+  "appId": "895740313",
+  "asar": true,
+  "productName": "UniTranslateTool",
+  "artifactName": "${productName}_${os}_${arch}_${version}.${ext}",
+  "directories": {
+    "output": "release/${version}"
+  },
+  "files": [
+    "dist",
+    "dist-electron"
+  ],
+  "mac": {
+    "target": {
+      "target": "dmg",
+      "arch": [
+        // "x64",
+        "arm64"
+      ]
+    },
+  },
+  "linux": {
+    "target": {
+      "target": "AppImage",
+      "arch": [
+        "x64"
+      ]
+    },
+  },
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }
+    ],
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "deleteAppDataOnUninstall": false
+  },
+}
