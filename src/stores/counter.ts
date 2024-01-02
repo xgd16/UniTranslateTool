@@ -29,9 +29,20 @@ export const useLoginStore = defineStore('loginStore', {
             const loginLastStore = useLoginLastStore()
             loginLastStore.serviceAddr = this.serviceAddr
             loginLastStore.key = this.key
+        },
+        clean() {
+            this.serviceAddr = ''
+            this.key = ''
         }
     },
     persist: {
         enabled: true
     }
+})
+
+export const useBaseConfigStore = defineStore('baseConfigStore', {
+    state: () => ({
+        menuOpen: true,
+    }),
+    persist: saveToDisk
 })

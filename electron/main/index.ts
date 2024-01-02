@@ -31,14 +31,18 @@ const preload = join(__dirname, '../preload/index.js')
 const url = process.env.VITE_DEV_SERVER_URL
 const indexHtml = join(process.env.DIST, 'index.html')
 
+const width = 1280
+const height = 720
+
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
-    width: 1280,
+    width: width,
     minWidth: 1000,
-    height: 720,
+    height: height,
     minHeight: 700,
     icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
+    frame: false, /*去掉顶部导航 去掉关闭按钮 最大化最小化按钮*/
     webPreferences: {
       preload,
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
@@ -68,6 +72,40 @@ async function createWindow() {
     return { action: 'deny' }
   })
   // win.webContents.on('will-navigate', (event, url) => { }) #344
+
+  win.on('resize', () => {
+    const isFullScreen = win.isFullScreen()
+    win.webContents.send('windowResizeEvent', isFullScreen)
+  })
+
+  ipcMain.on('windows-min', () => {
+    win.minimize()
+  })
+  
+  ipcMain.on('windows-max', () => {
+    const sys = process.platform
+    if (win.isMaximized()) {
+      if (sys == 'darwin') {
+        win.setContentSize(width, height);
+      } else {
+        win.restore()
+      }
+    } else {
+      if (sys == 'darwin') {
+        win.setFullScreen(!win.isFullScreen())
+      } else {
+        win.maximize()
+      }
+    }
+  })
+  
+  ipcMain.on('windows-close', () => {
+    app.quit()
+  })
+  
+  ipcMain.on('windows-full-screen', () => {
+    (win as any).setFullScreen(!(win as any).isFullScreen())
+  })
 }
 
 app.whenReady().then(createWindow)
@@ -94,6 +132,8 @@ app.on('activate', () => {
   }
 })
 
+
+
 // New window example arg: new windows url
 ipcMain.handle('open-win', (_, arg) => {
   const childWindow = new BrowserWindow({
@@ -110,3 +150,6 @@ ipcMain.handle('open-win', (_, arg) => {
     childWindow.loadFile(indexHtml, { hash: arg })
   }
 })
+
+
+

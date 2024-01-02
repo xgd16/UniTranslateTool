@@ -15,7 +15,8 @@
                 <el-input v-model="form.key" type="password" placeholder="请输入密钥" show-password></el-input>
             </el-form-item>
             <el-form-item class="">
-                <el-button type="primary" @click="loginEvent(formRef)" plain>登录</el-button>
+                <el-button type="primary" style="width: 100px;" @click="loginEvent(formRef)" plain>登录</el-button>
+                <el-button type="info" @click="closeEvent" plain>关闭</el-button>
             </el-form-item>
         </el-form>
       </div>
@@ -27,6 +28,7 @@ import { useLoginStore, useLoginLastStore } from '../stores/counter';
 import { reactive,ref } from 'vue';
 import { ElMessage,FormInstance } from 'element-plus';
 import router from '../router/index';
+import { ipcRenderer } from 'electron';
 
 const loginStore = useLoginStore()
 const loginLastStore = useLoginLastStore()
@@ -37,6 +39,10 @@ const form = reactive({
 })
 
 const formRef = ref<FormInstance>()
+
+const closeEvent = () => {
+    ipcRenderer.send('windows-close')
+}
 
 const loginEvent = (formEl: FormInstance | undefined) => {
     if (!formEl) return

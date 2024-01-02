@@ -12,6 +12,7 @@ import piniaPersist from 'pinia-plugin-persist'
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import 'remixicon/fonts/remixicon.css'
+import { useBaseConfigStore } from './stores/counter'
 
 const pinia = createPinia()
 
