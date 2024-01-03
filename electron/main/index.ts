@@ -36,7 +36,7 @@ const height = 720
 
 async function createWindow() {
   win = new BrowserWindow({
-    title: 'Main window',
+    title: 'UniTranslateTool',
     width: width,
     minWidth: 1000,
     height: height,

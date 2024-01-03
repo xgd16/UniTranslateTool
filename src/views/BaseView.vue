@@ -9,61 +9,44 @@
          <!-- 菜单 -->
          <div class="w-full h-full rounded-md dark:bg-slate-800 dark:highlight-white/5 drop-shadow-2xl px-1 py-1" >
             <!-- 菜单头部 -->
-            <template v-if="!menuControlStatus">
-               <div  class="h-5 overflow-hidden leading-5 w-full bg-slate-700 highlight-white/5 rounded-md flex flex-row cursor-pointer hover:bg-slate-600 select-none mb-2">
-                  <div class="basis-1/3 text-center bg-red-900 hover:bg-red-700" @click="closeWindow">
-                     <i class="ri-close-fill"></i>
-                  </div>
-                  <div class="basis-1/3 text-center bg-yellow-900 hover:bg-yellow-700" @click="minWindow">
-                     <i class="ri-subtract-fill"></i>
-                  </div>
-                  <div class="basis-1/3 text-center bg-green-900 hover:bg-green-700" @click="fullScreenWindow">
-                     <i class="ri-expand-left-right-line" v-if="!windowSize"></i>
-                     <i class="ri-contract-left-right-line" v-else></i>
-                  </div>
+            <div  class="h-5 overflow-hidden leading-5 w-full bg-slate-700 highlight-white/5 rounded-md flex flex-row cursor-pointer hover:bg-slate-600 select-none mb-2">
+               <div class="basis-1/3 text-center bg-red-900 hover:bg-red-700" @click="closeWindow">
+                  <i class="ri-close-fill"></i>
                </div>
-               <template v-for="item in routeList">
-                  <el-tooltip
-                     v-if="!item.meta.notView"
-                     class="box-item"
-                     effect="dark"
-                     :content="item.meta.title"
-                     placement="right-start"
-                  >
-                     <div class="h-10 w-full bg-slate-700 highlight-white/5 rounded-md flex flex-row cursor-pointer hover:bg-slate-600 select-none mb-2" @click="router.push({path: item.path})" >
-                        <div :class="menuItemClass + ' text-center'">
-                           <i :class="item.meta.icon + ' leading-10'" ></i>
-                        </div>
-                        <div v-if="menuControlStatus" class="basis-9/12 leading-10 pl-2" >{{item.meta.title}}</div>
-                     </div>
-                  </el-tooltip>
-               </template>
-            </template>
-            
-            <template v-else>
-               <div  class="h-5 overflow-hidden leading-5 w-full bg-slate-700 highlight-white/5 rounded-md flex flex-row cursor-pointer hover:bg-slate-600 select-none mb-2">
-                  <div class="basis-1/3 text-center bg-red-900 hover:bg-red-700" @click="closeWindow">
-                     <i class="ri-close-fill"></i>
-                  </div>
-                  <div class="basis-1/3 text-center bg-yellow-900 hover:bg-yellow-700" @click="minWindow">
-                     <i class="ri-subtract-fill"></i>
-                  </div>
-                  <div class="basis-1/3 text-center bg-green-900 hover:bg-green-700" @click="fullScreenWindow">
-                     <i class="ri-expand-left-right-line" v-if="!windowSize"></i>
-                     <i class="ri-contract-left-right-line" v-else></i>
-                  </div>
+               <div class="basis-1/3 text-center bg-yellow-900 hover:bg-yellow-700" @click="minWindow">
+                  <i class="ri-subtract-fill"></i>
                </div>
-               <template v-for="item in routeList">
-                  <div v-if="!item.meta.notView"  class="h-10 w-full bg-slate-700 highlight-white/5 rounded-md flex flex-row cursor-pointer hover:bg-slate-600 select-none mb-2" @click="router.push({path: item.path})">
+               <div class="basis-1/3 text-center bg-green-900 hover:bg-green-700" @click="fullScreenWindow">
+                  <i class="ri-expand-left-right-line" v-if="!windowSize"></i>
+                  <i class="ri-contract-left-right-line" v-else></i>
+               </div>
+            </div>
+            <template  v-if="!menuControlStatus" v-for="item in routeList">
+               <el-tooltip
+                  v-if="!item.meta.notView"
+                  class="box-item"
+                  effect="dark"
+                  :content="item.meta.title"
+                  placement="right-start"
+               >
+                  <div class="h-10 w-full bg-slate-700 highlight-white/5 rounded-md flex flex-row cursor-pointer hover:bg-slate-600 select-none mb-2" @click="router.push({path: item.path})" >
                      <div :class="menuItemClass + ' text-center'">
                         <i :class="item.meta.icon + ' leading-10'" ></i>
                      </div>
                      <div v-if="menuControlStatus" class="basis-9/12 leading-10 pl-2" >{{item.meta.title}}</div>
                   </div>
-               </template>
+               </el-tooltip>
+            </template>
+
+            <template v-else v-for="item in routeList">
+               <div v-if="!item.meta.notView"  class="h-10 w-full bg-slate-700 highlight-white/5 rounded-md flex flex-row cursor-pointer hover:bg-slate-600 select-none mb-2" @click="router.push({path: item.path})">
+                  <div :class="menuItemClass + ' text-center'">
+                     <i :class="item.meta.icon + ' leading-10'" ></i>
+                  </div>
+                  <div v-if="menuControlStatus" class="basis-9/12 leading-10 pl-2" >{{item.meta.title}}</div>
+               </div>
             </template>
          </div>
-
       </div>
       <div class="basis-full h-full pr-4 py-4">
          <div class="h-full w-full overflow-y-hidden">

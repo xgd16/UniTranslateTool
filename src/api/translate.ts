@@ -20,14 +20,15 @@ type TranslationData = {
     translationLen: number;
 };
 
-export const translate = (text: string, from: string, to: string) => {
+export const translate = (text: string, from: string, to: string, platform: string = '') => {
     return req<Response<TranslationData>>({
         url: '/api/translate',
         method: 'POST',
         data: {
             text,
             from,
-            to
+            to,
+            platform
         }
     })
 }

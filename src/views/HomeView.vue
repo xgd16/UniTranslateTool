@@ -1,6 +1,14 @@
 <template>
     <div class="h-8 bg-slate-700 rounded-md leading-8 flex items-center justify-center">
         <el-form class="flex" size="small" :model="formData">
+            <el-form-item style="margin-bottom: 0;">
+                <el-select v-model="formData.platform" class="w-24 mr-2 select-none">
+                    <el-option
+                        v-for="item in selectTranslatePlatformList"
+                        :label="item.label"
+                        :value="item.value" />
+                </el-select>
+            </el-form-item>
             <el-form-item class="flex-initial" style="margin-bottom: 0;">
                 <el-select v-model="formData.fromLang">
                     <el-option
@@ -32,8 +40,9 @@
 <script setup lang="ts">
 import { reactive, ref, onMounted } from 'vue';
 import { ElNotification } from 'element-plus';
-import { getLangList, translate } from '../api/translate';
-import { langArr, clause } from '../utils/common';
+import { getLangList } from '../api/translate';
+import { langArr } from '../utils/common';
+import { translate } from '../utils/translate';
 
 const translateText = reactive({
     fromText: '',
@@ -41,19 +50,8 @@ const translateText = reactive({
 })
 
 const translateEvent = async () => {
-    const boomText = clause(translateText.fromText)
     translateText.toText = ''
-    for (const key in boomText) {
-        const item = boomText[key]
-        const respData = await translate(item, formData.fromLang, formData.toLang)
-        
-        if (respData.code != 1000) {
-            translateText.toText = '翻译失败'
-            return false
-        }
-
-        translateText.toText += respData.data.translate.join('')
-    }
+    translateText.toText = await translate(translateText.fromText, formData.fromLang, formData.toLang, formData.platform)
 }
 
 const changeFormText = () => {
@@ -78,6 +76,7 @@ const getSelectViewData = (type: string) => {
 const formData = reactive({
     fromLang: 'auto',
     toLang: 'en',
+    platform: ''
 })
 
 const switchLang = () => {
@@ -107,6 +106,41 @@ const selectViewData = ref<selectDataType[]>([
     {
         label: '自动检测',
         value: 'auto'
+    }
+])
+
+const selectTranslatePlatformList = ref<selectDataType[]>([
+    {
+        label: '自动',
+        value: ''
+    },
+    {
+        label: '百度翻译',
+        value: 'Baidu'
+    },
+    {
+        label: '有道翻译',
+        value: 'YouDao'
+    },
+    {
+        label: '谷歌翻译',
+        value: 'Google'
+    },
+    {
+        label: 'Deepl',
+        value: 'Deepl'
+    },
+    {
+        label: 'ChatGPT',
+        value: 'ChatGPT'
+    },
+    {
+        label: '讯飞',
+        value: 'XunFei'
+    },
+    {
+        label: '讯飞 (niu)',
+        value: 'XunFeiNiu'
     }
 ])
 
