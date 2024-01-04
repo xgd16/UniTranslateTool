@@ -1,9 +1,10 @@
 import Store from 'electron-store';
 Store.initRenderer()
+
 const eStore = new Store()
 
 class db<T=any> {
-    private name: string
+    public name: string
 
     constructor(name: string) {
         this.name = name

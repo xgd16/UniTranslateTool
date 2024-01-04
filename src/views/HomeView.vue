@@ -1,5 +1,5 @@
 <template>
-    <div class="h-8 bg-slate-700 rounded-md leading-8 flex items-center justify-center">
+    <div class="h-8 bg-slate-700 rounded-md leading-8 flex items-center justify-center" >
         <el-form class="flex" size="small" :model="formData">
             <el-form-item style="margin-bottom: 0;">
                 <el-select v-model="formData.platform" class="w-24 mr-2 select-none">
@@ -31,7 +31,7 @@
             </el-form-item>
         </el-form>
     </div>
-    <div class="flex flex-row pt-2" style="height: calc(100% - 2rem);">
+    <div class="flex flex-row pt-2" style="height: calc(100% - 2rem);" v-loading="loading">
         <div class="h-full basis-6/12 pr-1"><textarea class="h-full w-full resize-none bg-slate-800 rounded-md px-2 py-1" placeholder="请输入需要翻译的内容" @change="changeFormText" v-model="translateText.fromText"></textarea></div>
         <div class="h-full basis-6/12 pl-1"><textarea class="h-full w-full resize-none bg-slate-800 rounded-md px-2 py-1" readonly placeholder="结果会在这里。。。" v-model="translateText.toText"></textarea></div>
     </div>
@@ -49,9 +49,22 @@ const translateText = reactive({
     toText: ''
 })
 
+const loading = ref(false)
+
 const translateEvent = async () => {
+    loading.value = true
     translateText.toText = ''
-    translateText.toText = await translate(translateText.fromText, formData.fromLang, formData.toLang, formData.platform)
+    try {
+        translateText.toText = await translate(translateText.fromText, formData.fromLang, formData.toLang, formData.platform)
+    } catch {
+        ElNotification({
+            message: '翻译失败',
+            title: '异常提示',
+            type: 'error',
+            duration: 1000,
+        })
+    }
+    loading.value = false
 }
 
 const changeFormText = () => {

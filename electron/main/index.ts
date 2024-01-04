@@ -1,7 +1,8 @@
-import { app, BrowserWindow, shell, ipcMain } from 'electron'
+import { app, BrowserWindow, shell, dialog, ipcMain } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
 import { createWebService } from '../web/main'
+import { useBaseConfigStore } from '../store/counter'
 
 process.env.DIST_ELECTRON = join(__dirname, '..')
 process.env.DIST = join(process.env.DIST_ELECTRON, '../dist')
@@ -152,4 +153,25 @@ ipcMain.handle('open-win', (_, arg) => {
 })
 
 
+ipcMain.on('save-base-config', (_, data: {path: string}) => {
+  useBaseConfigStore.set({defaultOutPutPath: data.path})
+})
+ipcMain.on('get-base-config', (e, _) => {
+  const baseConfig = useBaseConfigStore.get()
+  e.reply('get-base-config-back', baseConfig ?? {defaultOutPutPath: ''})
+})
 
+ipcMain.on('windows-select-dir', (e, data) => {
+  let select = dialog.showOpenDialogSync(win, {
+    properties: ['openDirectory']
+  })
+
+  select ??= []
+
+  let selectStr = select.length <= 0 ? '' : select[0]
+
+  e.reply('windows-select-dir-back', {
+    e: data.e,
+    path: selectStr
+  })
+})
